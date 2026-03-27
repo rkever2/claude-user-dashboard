@@ -48,7 +48,7 @@ PORT=3080
 
 **To get your Admin API key:**
 
-1. Go to [console.anthropic.com/settings/admin-keys](https://console.anthropic.com/settings/admin-keys)
+1. Go to [https://platform.claude.com/settings/keys](https://platform.claude.com/settings/keys)
 2. Sign in with your Anthropic account (requires **org admin** role)
 3. Click **Create Key**
 4. Copy the key (starts with `sk-ant-admin-...`) and paste it into `.env`
