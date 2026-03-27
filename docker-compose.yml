@@ -1,0 +1,15 @@
+services:
+  dashboard:
+    build: .
+    ports:
+      - "${PORT:-3080}:3080"
+    volumes:
+      - "${CLAUDE_DATA_DIR:-~/.claude}:/data/claude:ro"
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      - CLAUDE_DATA_DIR=/data/claude
+      - PORT=3080
+      - DATA_SOURCE_MODE=${DATA_SOURCE_MODE:-local}
+      - ANTHROPIC_ADMIN_API_KEY=${ANTHROPIC_ADMIN_API_KEY:-}

@@ -1,0 +1,86 @@
+@import "tailwindcss";
+
+@theme {
+  /* Brand accent */
+  --color-brand: oklch(72.27% 0.192 149.58);
+  --color-brand-hover: oklch(62.71% 0.1699 149.21);
+  --color-brand-light: oklch(92% 0.05 150);
+
+  /* Chart palette */
+  --color-chart-1: oklch(72.27% 0.192 149.58);
+  --color-chart-2: oklch(65% 0.15 250);
+  --color-chart-3: oklch(75% 0.12 80);
+  --color-chart-4: oklch(60% 0.18 320);
+  --color-chart-5: oklch(70% 0.14 30);
+
+  /* Neutrals */
+  --color-surface: oklch(0.98 0 0);
+  --color-border: oklch(0.88 0 0);
+  --color-muted: oklch(0.56 0 0);
+  --color-muted-light: oklch(0.71 0 0);
+
+  /* Status colors */
+  --color-error: oklch(63% 0.21 25);
+  --color-error-light: oklch(95% 0.03 25);
+  --color-warning: oklch(75% 0.15 70);
+  --color-warning-light: oklch(95% 0.03 70);
+
+  /* Typography */
+  --font-display: "Satoshi", "Inter", sans-serif;
+  --font-body: "Inter", system-ui, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", "Cascadia Mono", monospace;
+}
+
+/* Global resets for Swiss design */
+* {
+  border-radius: 0 !important;
+}
+
+body {
+  font-family: var(--font-body);
+  color: oklch(0.14 0 0);
+  background: oklch(1 0 0);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Dark mode */
+.dark body,
+.dark {
+  color: oklch(0.92 0 0);
+  background: oklch(0.1 0 0);
+}
+
+.dark .bg-white {
+  background: oklch(0.1 0 0);
+}
+
+.dark .bg-surface {
+  background: oklch(0.14 0 0);
+}
+
+.dark .border-border {
+  border-color: oklch(0.25 0 0);
+}
+
+.dark .text-muted {
+  color: oklch(0.65 0 0);
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: oklch(0.8 0 0);
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: oklch(0.3 0 0);
+}

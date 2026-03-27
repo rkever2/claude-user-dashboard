@@ -1,0 +1,43 @@
+interface ErrorAlertProps {
+  title?: string;
+  message: string;
+  onRetry?: () => void;
+}
+
+export function ErrorAlert({ title, message, onRetry }: ErrorAlertProps) {
+  return (
+    <div className="border border-error bg-error-light p-5">
+      <div className="flex items-start gap-3">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 20 20"
+          fill="currentColor"
+          className="w-5 h-5 text-error shrink-0 mt-0.5"
+        >
+          <path
+            fillRule="evenodd"
+            d="M18 10a8 8 0 1 1-16 0 8 8 0 0 1 16 0Zm-8-5a.75.75 0 0 1 .75.75v4.5a.75.75 0 0 1-1.5 0v-4.5A.75.75 0 0 1 10 5Zm0 10a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z"
+            clipRule="evenodd"
+          />
+        </svg>
+        <div className="flex-1 min-w-0">
+          {title && (
+            <p className="text-[11px] uppercase tracking-[0.05em] font-semibold text-error mb-1">
+              {title}
+            </p>
+          )}
+          <p className="text-sm leading-relaxed">{message}</p>
+          {onRetry && (
+            <button
+              type="button"
+              onClick={onRetry}
+              className="mt-3 text-xs font-medium uppercase tracking-[0.05em] text-error hover:text-error/70 transition-colors cursor-pointer"
+            >
+              Retry
+            </button>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
