@@ -15,6 +15,7 @@ import sessionsRoutes from "./routes/sessions.js";
 import costsRoutes from "./routes/costs.js";
 import insightsRoutes from "./routes/insights.js";
 
+
 const app = new Hono();
 
 app.use("*", cors());
@@ -38,6 +39,7 @@ app.route("/api/models", modelsRoutes);
 app.route("/api/sessions", sessionsRoutes);
 app.route("/api/costs", costsRoutes);
 app.route("/api/insights", insightsRoutes);
+
 
 // Enhanced health endpoint
 app.get("/api/health", async (c) => {

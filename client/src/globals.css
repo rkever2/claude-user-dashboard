@@ -40,6 +40,7 @@ body {
   font-family: var(--font-body);
   color: oklch(0.14 0 0);
   background: oklch(1 0 0);
+  --color-chart-label: oklch(0.35 0 0);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -49,6 +50,7 @@ body {
 .dark {
   color: oklch(0.92 0 0);
   background: oklch(0.1 0 0);
+  --color-chart-label: oklch(0.75 0 0);
 }
 
 .dark .bg-white {

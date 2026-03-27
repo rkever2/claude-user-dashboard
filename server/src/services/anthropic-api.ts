@@ -6,14 +6,17 @@ export type ApiResult<T = unknown> =
   | { ok: true; data: T }
   | { ok: false; error: "NOT_CONFIGURED" | "API_KEY_INVALID" | "RATE_LIMITED" | "NETWORK_ERROR" | "API_ERROR"; message: string };
 
-async function fetchAnthropicAdmin<T = unknown>(endpoint: string, params: Record<string, string> = {}): Promise<ApiResult<T>> {
+async function fetchAnthropicAdmin<T = unknown>(
+  endpoint: string,
+  params: Record<string, string> = {},
+): Promise<ApiResult<T>> {
   if (!config.anthropicAdminApiKey) {
     return { ok: false, error: "NOT_CONFIGURED", message: "Admin API key not configured" };
   }
 
   const url = new URL(`${BASE_URL}/${endpoint}`);
-  for (const [key, value] of Object.entries(params)) {
-    url.searchParams.set(key, value);
+  for (const [k, value] of Object.entries(params)) {
+    url.searchParams.set(k, value);
   }
 
   try {

@@ -1,4 +1,5 @@
 import { NavLink } from "react-router-dom";
+import { useHealth } from "@/hooks/use-queries";
 
 const links = [
   { to: "/", label: "Overview" },
@@ -10,6 +11,9 @@ const links = [
 ];
 
 export function Nav() {
+  const { data: health } = useHealth();
+  const isApiMode = health?.dataSourceMode === "api";
+
   return (
     <nav className="fixed left-0 top-0 bottom-0 w-60 border-r border-border bg-white dark:bg-[oklch(0.1_0_0)] flex flex-col">
       <div className="px-6 py-6">
@@ -40,7 +44,7 @@ export function Nav() {
 
       <div className="px-6 py-4 border-t border-border">
         <p className="text-[10px] uppercase tracking-[0.05em] text-muted font-medium">
-          Local data only
+          {isApiMode ? "API mode" : "Local data only"}
         </p>
       </div>
     </nav>

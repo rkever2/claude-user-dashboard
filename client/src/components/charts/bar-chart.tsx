@@ -39,7 +39,7 @@ export function BarChart({
           <YAxis
             type="category"
             dataKey="name"
-            tick={{ fontSize: 12, fill: "#222" }}
+            tick={{ fontSize: 12, fill: "var(--color-chart-label, #555)" }}
             axisLine={false}
             tickLine={false}
             width={140}
