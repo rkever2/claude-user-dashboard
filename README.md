@@ -2,6 +2,8 @@
 
 A local dashboard for visualizing your Claude Code CLI usage. Reads local `~/.claude/` files by default. Optionally connect the Anthropic Admin API for org-wide usage across all devices — switchable at runtime from the sidebar.
 
+![Alt text](./example.png)
+
 ## Prerequisites
 
 - **Docker** (and Docker Compose)
