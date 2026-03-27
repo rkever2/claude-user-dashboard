@@ -1,6 +1,6 @@
 # Claude Code Usage Dashboard
 
-A local dashboard for visualizing your Claude Code CLI usage. Supports two modes: **local-only** (reads `~/.claude/` files on this machine) or **API mode** (pulls org-wide usage from the Anthropic Admin API across all devices).
+A local dashboard for visualizing your Claude Code CLI usage. Reads local `~/.claude/` files by default. Optionally connect the Anthropic Admin API for org-wide usage across all devices — switchable at runtime from the sidebar.
 
 ## Prerequisites
 
@@ -13,7 +13,7 @@ A local dashboard for visualizing your Claude Code CLI usage. Supports two modes
 # 1. Copy the example env file
 cp .env.example .env
 
-# 2. (Optional) Edit .env to choose your data source mode
+# 2. (Optional) Add your Anthropic Admin API key to .env
 
 # 3. Build and run
 docker compose up --build
@@ -23,26 +23,22 @@ Open [http://localhost:3080](http://localhost:3080) in your browser.
 
 ## Configuration
 
-### Option 1: Local Only (default)
+### Local Only (default)
 
-Reads usage data directly from `~/.claude/` on this machine. No API key needed. Only shows stats for the current device.
+Works out of the box — just copy `.env.example` to `.env` and run. Reads usage data from `~/.claude/` on this machine (mounted **read-only** inside the container).
 
 ```bash
 # .env
-DATA_SOURCE_MODE=local
 CLAUDE_DATA_DIR=~/.claude
 PORT=3080
 ```
 
-This is the default — just copy `.env.example` to `.env` and run. The `CLAUDE_DATA_DIR` is mounted **read-only** inside the container.
+### With API Key (enables mode switching)
 
-### Option 2: API Mode (all devices)
-
-Uses the [Anthropic Admin API](https://docs.anthropic.com/en/api/admin-api) to pull org-wide usage across all devices. Local `~/.claude/` data is still used for session-level detail (project names, branches, conversation logs) since the API doesn't provide that granularity.
+Adding an `ANTHROPIC_ADMIN_API_KEY` enables a **Local / API** mode switcher in the sidebar. You can toggle between modes at runtime without restarting the container.
 
 ```bash
 # .env
-DATA_SOURCE_MODE=api
 CLAUDE_DATA_DIR=~/.claude
 ANTHROPIC_ADMIN_API_KEY=sk-ant-admin-...
 PORT=3080
@@ -55,6 +51,8 @@ PORT=3080
 3. Click **Create Key**
 4. Copy the key (starts with `sk-ant-admin-...`) and paste it into `.env`
 
+> **Note:** The Admin API provides org-level aggregates (tokens by model, by day). It does not identify which device made a request. Session-level detail (project names, branches, conversation logs) always comes from local `~/.claude/` files.
+
 **What API mode adds:**
 
 | Feature | Local Only | API Mode |
@@ -64,17 +62,14 @@ PORT=3080
 | Session details (project, branch, prompts) | Yes | Yes |
 | Model breakdown | Yes | Yes |
 | Actual org-wide usage totals | No | Yes |
-| Per-device filtering | N/A | Yes |
-
-> **Note:** The API provides org-level aggregates (tokens by model, by day, by workspace). It does not inherently identify which device made a request. Device-level detail comes from local `~/.claude/` files on each machine.
 
 ## Pages
 
 - **Overview** — KPI summary: input/output tokens, sessions, messages, avg messages/session, cache hit rate. Top projects table and model distribution donut chart.
-- **Activity** — Daily output tokens by model (stacked area chart), sessions and messages over time. Filterable by date range.
-- **Projects** — Sessions per project bar chart, project table with branches, message counts, and date ranges.
+- **Activity** — Daily output tokens by model (stacked area chart), sessions and messages over time. Sortable daily breakdown table. Filterable by date range.
+- **Projects** — Sessions per project bar chart, searchable/sortable/filterable project table with branches, message counts, and date ranges.
 - **Models** — Token distribution donut chart, detailed breakdown table per model with input/output/cache tokens.
-- **Sessions** — Sortable list of all sessions with project, branch, message count, and first prompt.
+- **Sessions** — Searchable, sortable, filterable session list with multi-select filters for Project and Branch columns.
 - **Insights** — Cache hit rate, average messages per session, peak usage hour, session-start-by-hour bar chart, and longest session stats.
 
 ## Development
@@ -103,7 +98,7 @@ Client runs on http://localhost:5173 and proxies API requests to the server on p
 
 ## Data Sources
 
-**Local files** (always read, both modes):
+**Local files** (always read):
 
 | File | Content |
 |------|---------|

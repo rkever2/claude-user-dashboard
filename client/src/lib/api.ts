@@ -44,6 +44,32 @@ async function fetchApi<T>(endpoint: string, params?: Record<string, string>): P
   return response.json();
 }
 
+async function postApi<T>(endpoint: string, body: unknown): Promise<T> {
+  const url = new URL(`${BASE_URL}${endpoint}`, window.location.origin);
+  let response: Response;
+  try {
+    response = await fetch(url.toString(), {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
+  } catch (err: unknown) {
+    throw new ApiError("NETWORK_ERROR", `Cannot connect to server: ${(err as Error).message}`, 0);
+  }
+
+  if (!response.ok) {
+    let data: { code?: string; message?: string } | null = null;
+    try {
+      data = await response.json();
+    } catch {
+      // not JSON
+    }
+    throw new ApiError(data?.code || "API_ERROR", data?.message || `API error: ${response.status}`, response.status);
+  }
+
+  return response.json();
+}
+
 export const api = {
   getHealth: () => fetchApi("/health"),
   getOverview: () => fetchApi("/overview"),
@@ -56,4 +82,6 @@ export const api = {
   getCosts: (range?: string) => fetchApi("/costs", range ? { range } : undefined),
   getCostsAdmin: () => fetchApi("/costs/admin"),
   getInsights: () => fetchApi("/insights"),
+  getMode: () => fetchApi<{ mode: string; apiKeyConfigured: boolean }>("/mode"),
+  setMode: (mode: string) => postApi<{ mode: string }>("/mode", { mode }),
 };

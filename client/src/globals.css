@@ -69,6 +69,24 @@ body {
   color: oklch(0.65 0 0);
 }
 
+/* Dark mode chart tooltips */
+.dark .recharts-default-tooltip {
+  background: oklch(0.14 0 0) !important;
+  border-color: oklch(0.25 0 0) !important;
+  color: oklch(0.92 0 0) !important;
+}
+
+.dark .recharts-default-tooltip .recharts-tooltip-label {
+  color: oklch(0.75 0 0) !important;
+}
+
+/* Dark mode form elements */
+.dark select,
+.dark select option {
+  background: oklch(0.14 0 0);
+  color: oklch(0.92 0 0);
+}
+
 /* Scrollbar styling */
 ::-webkit-scrollbar {
   width: 6px;

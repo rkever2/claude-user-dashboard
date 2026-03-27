@@ -9,9 +9,22 @@ import { useActivity } from "@/hooks/use-queries";
 import { formatTokens, formatNumber, formatDate } from "@/lib/format";
 import { ApiError } from "@/lib/api";
 
+type SortKey = "date" | "messages" | "sessions" | "tools" | "tokens";
+
 export function ActivityPage() {
   const [range, setRange] = useState("30d");
+  const [sortKey, setSortKey] = useState<SortKey>("date");
+  const [sortDir, setSortDir] = useState<"asc" | "desc">("desc");
   const { data, isLoading, isError, error, refetch } = useActivity(range);
+
+  function handleSort(key: string) {
+    if (key === sortKey) {
+      setSortDir((d) => (d === "asc" ? "desc" : "asc"));
+    } else {
+      setSortKey(key as SortKey);
+      setSortDir("desc");
+    }
+  }
 
   // Extract all unique model keys for stacked chart
   const modelKeys = useMemo(() => {
@@ -118,13 +131,29 @@ export function ActivityPage() {
           </div>
           <DataTable
             columns={[
-              { key: "date", header: "Date", render: (row: NonNullable<typeof data>["daily"][0]) => formatDate(row.date) },
-              { key: "messages", header: "Messages", align: "right", render: (row) => formatNumber(row.messageCount) },
-              { key: "sessions", header: "Sessions", align: "right", render: (row) => formatNumber(row.sessionCount) },
-              { key: "tools", header: "Tool Calls", align: "right", render: (row) => formatNumber(row.toolCallCount) },
-              { key: "tokens", header: "Tokens", align: "right", render: (row) => formatTokens(row.totalTokens) },
+              { key: "date", header: "Date", sortable: true, render: (row: NonNullable<typeof data>["daily"][0]) => formatDate(row.date) },
+              { key: "messages", header: "Messages", align: "right", sortable: true, render: (row) => formatNumber(row.messageCount) },
+              { key: "sessions", header: "Sessions", align: "right", sortable: true, render: (row) => formatNumber(row.sessionCount) },
+              { key: "tools", header: "Tool Calls", align: "right", sortable: true, render: (row) => formatNumber(row.toolCallCount) },
+              { key: "tokens", header: "Tokens", align: "right", sortable: true, render: (row) => formatTokens(row.totalTokens) },
             ]}
-            data={data?.daily.slice().reverse() || []}
+            data={
+              (data?.daily.slice() || []).sort((a, b) => {
+                let av: string | number;
+                let bv: string | number;
+                switch (sortKey) {
+                  case "date": av = a.date; bv = b.date; break;
+                  case "messages": av = a.messageCount; bv = b.messageCount; break;
+                  case "sessions": av = a.sessionCount; bv = b.sessionCount; break;
+                  case "tools": av = a.toolCallCount; bv = b.toolCallCount; break;
+                  case "tokens": av = a.totalTokens; bv = b.totalTokens; break;
+                }
+                const cmp = av < bv ? -1 : av > bv ? 1 : 0;
+                return sortDir === "asc" ? cmp : -cmp;
+              })
+            }
+            sortConfig={{ key: sortKey, direction: sortDir }}
+            onSort={handleSort}
           />
         </div>
       </div>

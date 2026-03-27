@@ -1,5 +1,6 @@
 import { NavLink } from "react-router-dom";
-import { useHealth } from "@/hooks/use-queries";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { api } from "@/lib/api";
 
 const links = [
   { to: "/", label: "Overview" },
@@ -11,8 +12,27 @@ const links = [
 ];
 
 export function Nav() {
-  const { data: health } = useHealth();
-  const isApiMode = health?.dataSourceMode === "api";
+  const queryClient = useQueryClient();
+
+  const { data: modeData } = useQuery({
+    queryKey: ["mode"],
+    queryFn: () => api.getMode(),
+    staleTime: 30_000,
+  });
+
+  const modeMutation = useMutation({
+    mutationFn: (mode: string) => api.setMode(mode),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["mode"] });
+      queryClient.invalidateQueries({ queryKey: ["health"] });
+      queryClient.invalidateQueries({ queryKey: ["overview"] });
+      queryClient.invalidateQueries({ queryKey: ["activity"] });
+      queryClient.invalidateQueries({ queryKey: ["costs"] });
+    },
+  });
+
+  const currentMode = modeData?.mode || "local";
+  const apiKeyConfigured = modeData?.apiKeyConfigured || false;
 
   return (
     <nav className="fixed left-0 top-0 bottom-0 w-60 border-r border-border bg-white dark:bg-[oklch(0.1_0_0)] flex flex-col">
@@ -40,12 +60,26 @@ export function Nav() {
             {link.label}
           </NavLink>
         ))}
-      </div>
 
-      <div className="px-6 py-4 border-t border-border">
-        <p className="text-[10px] uppercase tracking-[0.05em] text-muted font-medium">
-          {isApiMode ? "API mode" : "Local data only"}
-        </p>
+        {/* Mode switcher */}
+        <div className="mt-4 pt-4 border-t border-border px-3">
+          <p className="text-[10px] uppercase tracking-[0.05em] text-muted font-medium mb-2">
+            Data source
+          </p>
+          {apiKeyConfigured ? (
+            <select
+              value={currentMode}
+              onChange={(e) => modeMutation.mutate(e.target.value)}
+              disabled={modeMutation.isPending}
+              className="w-full px-2 py-1.5 text-xs border border-border bg-transparent text-inherit cursor-pointer focus:outline-none focus:border-brand disabled:opacity-50"
+            >
+              <option value="local">Local only</option>
+              <option value="api">API mode</option>
+            </select>
+          ) : (
+            <p className="text-xs text-muted">Local mode only</p>
+          )}
+        </div>
       </div>
     </nav>
   );

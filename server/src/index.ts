@@ -41,6 +41,26 @@ app.route("/api/costs", costsRoutes);
 app.route("/api/insights", insightsRoutes);
 
 
+// Mode switching (runtime toggle between local/api)
+app.get("/api/mode", (c) => {
+  return c.json({
+    mode: config.dataSourceMode,
+    apiKeyConfigured: !!config.anthropicAdminApiKey,
+  });
+});
+
+app.post("/api/mode", async (c) => {
+  const body = await c.req.json<{ mode: string }>();
+  if (body.mode === "api" && !config.anthropicAdminApiKey) {
+    return c.json({ error: true, message: "Cannot switch to API mode: no ANTHROPIC_ADMIN_API_KEY configured" }, 400);
+  }
+  if (body.mode !== "local" && body.mode !== "api") {
+    return c.json({ error: true, message: "Mode must be 'local' or 'api'" }, 400);
+  }
+  config.dataSourceMode = body.mode;
+  return c.json({ mode: config.dataSourceMode });
+});
+
 // Enhanced health endpoint
 app.get("/api/health", async (c) => {
   const issues: string[] = [];

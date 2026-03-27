@@ -1,3 +1,4 @@
+import { useState, useMemo } from "react";
 import { Header } from "@/components/layout/header";
 import { StatCard } from "@/components/ui/stat-card";
 import { StatCardSkeleton, ChartSkeleton } from "@/components/ui/skeleton";
@@ -5,14 +6,73 @@ import { ErrorAlert } from "@/components/ui/error-alert";
 import { DonutChart, DonutLegend } from "@/components/charts/donut-chart";
 import { AreaChart } from "@/components/charts/area-chart";
 import { DataTable } from "@/components/ui/data-table";
+import { MultiSelectFilter } from "@/components/ui/multi-select-filter";
 import { useOverview, useActivity, useProjects } from "@/hooks/use-queries";
 import { formatTokens, formatNumber, formatDateFull } from "@/lib/format";
 import { ApiError } from "@/lib/api";
+import type { ProjectStats } from "@shared/types";
+
+type SortKey = "name" | "sessions" | "messages" | "branches" | "lastActive";
 
 export function OverviewPage() {
   const { data: overview, isLoading: overviewLoading, isError: overviewError, error: overviewErr, refetch: refetchOverview } = useOverview();
   const { data: activity, isLoading: activityLoading, isError: activityError, error: activityErr, refetch: refetchActivity } = useActivity("30d");
   const { data: projects } = useProjects();
+
+  const [search, setSearch] = useState("");
+  const [projectFilter, setProjectFilter] = useState<string[]>([]);
+  const [sortKey, setSortKey] = useState<SortKey>("sessions");
+  const [sortDir, setSortDir] = useState<"asc" | "desc">("desc");
+
+  const allProjects = projects?.projects || [];
+
+  const projectNames = useMemo(
+    () => [...new Set(allProjects.map((p) => p.displayName))].sort(),
+    [allProjects],
+  );
+
+  function getSortValue(row: ProjectStats, key: SortKey): string | number {
+    switch (key) {
+      case "name": return row.displayName.toLowerCase();
+      case "sessions": return row.totalSessions;
+      case "messages": return row.totalMessages;
+      case "branches": return row.branches.length;
+      case "lastActive": return row.lastActive || "";
+    }
+  }
+
+  const filtered = useMemo(() => {
+    let result = allProjects;
+
+    if (projectFilter.length > 0) {
+      result = result.filter((p) => projectFilter.includes(p.displayName));
+    }
+
+    if (search) {
+      const q = search.toLowerCase();
+      result = result.filter((p) => p.displayName.toLowerCase().includes(q));
+    }
+
+    result = [...result].sort((a, b) => {
+      const av = getSortValue(a, sortKey);
+      const bv = getSortValue(b, sortKey);
+      const cmp = av < bv ? -1 : av > bv ? 1 : 0;
+      return sortDir === "asc" ? cmp : -cmp;
+    });
+
+    return result;
+  }, [allProjects, projectFilter, search, sortKey, sortDir]);
+
+  function handleSort(key: string) {
+    if (key === sortKey) {
+      setSortDir((d) => (d === "asc" ? "desc" : "asc"));
+    } else {
+      setSortKey(key as SortKey);
+      setSortDir("desc");
+    }
+  }
+
+  const isFiltered = search || projectFilter.length > 0;
 
   const chartData =
     activity?.daily.map((d) => ({
@@ -37,8 +97,6 @@ export function OverviewPage() {
   for (const d of donutData) {
     d.percentage = donutTotal > 0 ? Math.round((d.value / donutTotal) * 1000) / 10 : 0;
   }
-
-  const topProjects = projects?.projects.slice(0, 5) || [];
 
   return (
     <div>
@@ -139,19 +197,43 @@ export function OverviewPage() {
           </div>
         </div>
 
-        {/* Top projects */}
+        {/* Projects table */}
         <div className="border border-border">
           <div className="px-6 pt-5 pb-3">
             <h3 className="text-[11px] uppercase tracking-[0.05em] font-semibold text-muted">
-              Top projects
+              Projects
             </h3>
           </div>
+
+          {/* Search + filter toolbar */}
+          <div className="px-6 pb-3 flex items-center gap-3">
+            <input
+              type="text"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search projects..."
+              className="px-3 py-1.5 text-xs border border-border bg-transparent text-inherit placeholder:text-muted focus:outline-none focus:border-brand w-56"
+            />
+            <MultiSelectFilter
+              label="Project"
+              options={projectNames}
+              selected={projectFilter}
+              onChange={setProjectFilter}
+            />
+            <span className="ml-auto text-xs text-muted">
+              {isFiltered
+                ? `${filtered.length} of ${allProjects.length} projects`
+                : `${allProjects.length} projects`}
+            </span>
+          </div>
+
           <DataTable
             columns={[
               {
                 key: "name",
                 header: "Project",
-                render: (row: (typeof topProjects)[0]) => (
+                sortable: true,
+                render: (row: ProjectStats) => (
                   <span className="font-medium">{row.displayName}</span>
                 ),
               },
@@ -159,28 +241,34 @@ export function OverviewPage() {
                 key: "sessions",
                 header: "Sessions",
                 align: "right",
+                sortable: true,
                 render: (row) => formatNumber(row.totalSessions),
               },
               {
                 key: "messages",
                 header: "Messages",
                 align: "right",
+                sortable: true,
                 render: (row) => formatNumber(row.totalMessages),
               },
               {
                 key: "branches",
                 header: "Branches",
                 align: "right",
+                sortable: true,
                 render: (row) => row.branches.length,
               },
               {
                 key: "lastActive",
                 header: "Last Active",
                 align: "right",
+                sortable: true,
                 render: (row) => (row.lastActive ? formatDateFull(row.lastActive) : "—"),
               },
             ]}
-            data={topProjects}
+            data={filtered}
+            sortConfig={{ key: sortKey, direction: sortDir }}
+            onSort={handleSort}
           />
         </div>
       </div>
