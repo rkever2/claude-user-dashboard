@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(docker compose *)",
+      "Bash(cd /Users/rkever/Developer/github/root/claude-stats*)",
+      "Bash(git *)",
+      "Bash(gh *)",
+      "Bash(npm *)",
+      "Bash(ls *)",
+      "Bash(mkdir *)",
+      "Bash(curl *)"
+    ]
+  }
+}
