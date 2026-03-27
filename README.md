@@ -48,10 +48,11 @@ PORT=3080
 
 **To get your Admin API key:**
 
-1. Go to [https://platform.claude.com/settings/keys](https://platform.claude.com/settings/keys)
+1. Go to [https://platform.claude.com](https://platform.claude.com/)
 2. Sign in with your Anthropic account (requires **org admin** role)
-3. Click **Create Key**
-4. Copy the key (starts with `sk-ant-admin-...`) and paste it into `.env`
+3. Click **API Keys** under "MANAGE"
+4. Create a new key to use with the dashboard
+5. Copy the key (starts with `sk-ant-admin-...`) and paste it into `.env`
 
 > **Note:** The Admin API provides org-level aggregates (tokens by model, by day). It does not identify which device made a request. Session-level detail (project names, branches, conversation logs) always comes from local `~/.claude/` files.
 
