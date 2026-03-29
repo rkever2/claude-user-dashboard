@@ -9,7 +9,6 @@ import { DataTable } from "@/components/ui/data-table";
 import { useCosts } from "@/hooks/use-queries";
 import { formatCurrency, formatDate } from "@/lib/format";
 import { ApiError } from "@/lib/api";
-import { SourceBadge } from "@/components/ui/source-badge";
 
 export function CostsPage() {
 	const [range, setRange] = useState("90d");
@@ -33,7 +32,7 @@ export function CostsPage() {
 
 	return (
 		<div>
-			<Header title="Costs" source={data?.source} />
+			<Header title="Costs" />
 			<div className="p-8">
 				{/* KPI row */}
 				<div className="grid grid-cols-3 gap-4 mb-8">
@@ -69,12 +68,9 @@ export function CostsPage() {
 
 				{/* Cumulative cost chart */}
 				<div className="border border-border p-6 mb-6">
-					<div className="flex items-center gap-1.5 mb-4">
-						<h3 className="text-[11px] uppercase tracking-[0.05em] font-semibold text-muted">
+											<h3 className="text-[11px] uppercase tracking-[0.05em] font-semibold text-muted">
 							Cumulative cost over time
 						</h3>
-						<SourceBadge source={data?.source} />
-					</div>
 					{isLoading ? (
 						<ChartSkeleton />
 					) : (
@@ -90,10 +86,7 @@ export function CostsPage() {
 				{/* Daily cost table */}
 				<div className="border border-border">
 					<div className="px-6 pt-5 pb-3">
-						<div className="flex items-center gap-1.5">
-							<h3 className="text-[11px] uppercase tracking-[0.05em] font-semibold text-muted">Daily costs</h3>
-							<SourceBadge source={data?.source} />
-						</div>
+													<h3 className="text-[11px] uppercase tracking-[0.05em] font-semibold text-muted">Daily costs</h3>
 					</div>
 					<DataTable
 						columns={[

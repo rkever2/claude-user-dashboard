@@ -8,7 +8,6 @@ import { DataTable } from "@/components/ui/data-table";
 import { useOverview, useActivity, useProjects } from "@/hooks/use-queries";
 import { formatTokens, formatNumber, formatDateFull } from "@/lib/format";
 import { ApiError } from "@/lib/api";
-import { SourceBadge } from "@/components/ui/source-badge";
 
 export function OverviewPage() {
 	const {
@@ -53,7 +52,7 @@ export function OverviewPage() {
 
 	return (
 		<div>
-			<Header title="Overview" source={overview?.source} />
+			<Header title="Overview" />
 			<div className="p-8">
 				{/* KPI row */}
 				<div className="grid grid-cols-5 gap-4 mb-8">
@@ -113,12 +112,9 @@ export function OverviewPage() {
 				{/* Charts row */}
 				<div className="grid grid-cols-3 gap-4 mb-8">
 					<div className="col-span-2 border border-border p-6">
-						<div className="flex items-center gap-1.5 mb-4">
-							<h3 className="text-[11px] uppercase tracking-[0.05em] font-semibold text-muted">
-								Output tokens — last 30 days
-							</h3>
-							<SourceBadge source={activity?.source} />
-						</div>
+						<h3 className="text-[11px] uppercase tracking-[0.05em] font-semibold text-muted mb-4">
+							Output tokens — last 30 days
+						</h3>
 						{activityLoading ? (
 							<ChartSkeleton height="h-56" />
 						) : activityError ? (
@@ -139,12 +135,9 @@ export function OverviewPage() {
 					</div>
 
 					<div className="border border-border p-6">
-						<div className="flex items-center gap-1.5 mb-4">
-							<h3 className="text-[11px] uppercase tracking-[0.05em] font-semibold text-muted">
-								Model distribution
-							</h3>
-							<SourceBadge source={overview?.source} />
-						</div>
+						<h3 className="text-[11px] uppercase tracking-[0.05em] font-semibold text-muted mb-4">
+							Model distribution
+						</h3>
 						<DonutChart
 							data={donutData}
 							height={160}
@@ -161,10 +154,7 @@ export function OverviewPage() {
 				{/* Top projects — always local */}
 				<div className="border border-border">
 					<div className="px-6 pt-5 pb-3">
-						<div className="flex items-center gap-1.5">
-							<h3 className="text-[11px] uppercase tracking-[0.05em] font-semibold text-muted">Top projects</h3>
-							<SourceBadge source="local" />
-						</div>
+						<h3 className="text-[11px] uppercase tracking-[0.05em] font-semibold text-muted">Top projects</h3>
 					</div>
 					<DataTable
 						columns={[

@@ -1,6 +1,5 @@
 import { NavLink } from "react-router-dom";
 import { useHealth } from "@/hooks/use-queries";
-import { SourceBadge } from "@/components/ui/source-badge";
 
 const links = [
 	{ to: "/", label: "Overview" },
@@ -61,15 +60,10 @@ export function Nav() {
 				))}
 			</div>
 
-			{health && (
+			{health?.lastDataDate && (
 				<div className="px-6 py-4 border-t border-border">
-					<div className="flex items-center gap-1.5">
-						<p className="text-[10px] uppercase tracking-[0.05em] text-muted font-medium">Stats as of</p>
-						<SourceBadge source={health.apiConfigured ? "api" : "local"} />
-					</div>
-					{health.lastDataDate && (
-						<p className="text-xs text-muted-light mt-0.5">{formatStatsDate(health.lastDataDate)}</p>
-					)}
+					<p className="text-[10px] uppercase tracking-[0.05em] text-muted font-medium">Stats as of</p>
+					<p className="text-xs text-muted-light mt-0.5">{formatStatsDate(health.lastDataDate)}</p>
 				</div>
 			)}
 		</nav>

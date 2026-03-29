@@ -81,7 +81,7 @@ export function SessionsPage() {
 
 	return (
 		<div>
-			<Header title="Sessions" source="local" />
+			<Header title="Sessions" />
 			<div className="p-8">
 				{isError ? (
 					<div className="mb-6">

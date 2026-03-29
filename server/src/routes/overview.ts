@@ -1,19 +1,11 @@
 import { Hono } from "hono";
 import { getStatsCache } from "../parsers/stats-cache.js";
 import { calculateCost, getModelDisplayName } from "../services/cost-calculator.js";
-import { config } from "../config.js";
-import { getApiOverview } from "../services/api-data-provider.js";
 import type { OverviewResponse } from "../types.js";
 
 const app = new Hono();
 
 app.get("/", async (c) => {
-	if (config.anthropicAdminApiKey) {
-		const result = await getApiOverview();
-		if (!result.ok) return c.json({ error: true, code: result.error, message: result.message }, 502);
-		return c.json({ ...result.data, source: "api" });
-	}
-
 	const stats = await getStatsCache();
 
 	let totalInputTokens = 0;
@@ -56,7 +48,6 @@ app.get("/", async (c) => {
 	}
 
 	const response: OverviewResponse = {
-		source: "local",
 		totalTokens,
 		totalInputTokens,
 		totalOutputTokens,

@@ -1,21 +1,12 @@
 import { Hono } from "hono";
 import { getStatsCache } from "../parsers/stats-cache.js";
 import { calculateCost } from "../services/cost-calculator.js";
-import { config } from "../config.js";
-import { getApiActivity } from "../services/api-data-provider.js";
 import type { ActivityResponse } from "../types.js";
 
 const app = new Hono();
 
 app.get("/", async (c) => {
 	const range = c.req.query("range") || "all";
-
-	if (config.anthropicAdminApiKey) {
-		const result = await getApiActivity(range);
-		if (!result.ok) return c.json({ error: true, code: result.error, message: result.message }, 502);
-		return c.json({ ...result.data, source: "api" });
-	}
-
 	const stats = await getStatsCache();
 
 	let activities = stats.dailyActivity;
@@ -58,7 +49,7 @@ app.get("/", async (c) => {
 		};
 	});
 
-	const response: ActivityResponse = { source: "local", daily };
+	const response: ActivityResponse = { daily };
 	return c.json(response);
 });
 

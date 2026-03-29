@@ -8,7 +8,6 @@ import { ErrorAlert } from "@/components/ui/error-alert";
 import { useActivity } from "@/hooks/use-queries";
 import { formatTokens, formatNumber, formatDate } from "@/lib/format";
 import { ApiError } from "@/lib/api";
-import { SourceBadge } from "@/components/ui/source-badge";
 
 export function ActivityPage() {
 	const [range, setRange] = useState("30d");
@@ -56,7 +55,7 @@ export function ActivityPage() {
 
 	return (
 		<div>
-			<Header title="Activity" source={data?.source} />
+			<Header title="Activity" />
 			<div className="p-8">
 				<div className="flex justify-end mb-6">
 					<DateRange value={range} onChange={setRange} />
@@ -74,12 +73,9 @@ export function ActivityPage() {
 
 				{/* Token chart */}
 				<div className="border border-border p-6 mb-6">
-					<div className="flex items-center gap-1.5 mb-4">
-						<h3 className="text-[11px] uppercase tracking-[0.05em] font-semibold text-muted">
-							Daily tokens by model
-						</h3>
-						<SourceBadge source={data?.source} />
-					</div>
+					<h3 className="text-[11px] uppercase tracking-[0.05em] font-semibold text-muted mb-4">
+						Daily tokens by model
+					</h3>
 					{isLoading ? (
 						<ChartSkeleton />
 					) : isError ? null : (
@@ -95,12 +91,9 @@ export function ActivityPage() {
 
 				{/* Sessions / messages chart */}
 				<div className="border border-border p-6 mb-6">
-					<div className="flex items-center gap-1.5 mb-4">
-						<h3 className="text-[11px] uppercase tracking-[0.05em] font-semibold text-muted">
-							Daily sessions & messages
-						</h3>
-						<SourceBadge source={data?.source} />
-					</div>
+					<h3 className="text-[11px] uppercase tracking-[0.05em] font-semibold text-muted mb-4">
+						Daily sessions & messages
+					</h3>
 					{isLoading ? (
 						<ChartSkeleton />
 					) : (
@@ -119,10 +112,7 @@ export function ActivityPage() {
 				{/* Data table */}
 				<div className="border border-border">
 					<div className="px-6 pt-5 pb-3">
-						<div className="flex items-center gap-1.5">
-							<h3 className="text-[11px] uppercase tracking-[0.05em] font-semibold text-muted">Daily breakdown</h3>
-							<SourceBadge source={data?.source} />
-						</div>
+						<h3 className="text-[11px] uppercase tracking-[0.05em] font-semibold text-muted">Daily breakdown</h3>
 					</div>
 					<DataTable
 						columns={[

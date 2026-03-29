@@ -19,7 +19,7 @@ export function ProjectsPage() {
 
 	return (
 		<div>
-			<Header title="Projects" source="local" />
+			<Header title="Projects" />
 			<div className="p-8">
 				{isError ? (
 					<div className="mb-6">

@@ -17,7 +17,6 @@ export interface HealthResponse {
 	statsCacheExists: boolean;
 	projectsDirExists: boolean;
 	sessionCount: number | null;
-	apiConfigured: boolean;
 	lastDataDate?: string | null;
 	issues: string[];
 }

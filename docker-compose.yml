@@ -11,4 +11,3 @@ services:
     environment:
       - CLAUDE_DATA_DIR=/data/claude
       - PORT=3080
-      - ANTHROPIC_ADMIN_API_KEY=${ANTHROPIC_ADMIN_API_KEY:-}

@@ -65,7 +65,7 @@ export interface SessionsIndex {
 
 // API response types
 export interface OverviewResponse {
-	source?: "api" | "local";
+
 	totalTokens: number;
 	totalInputTokens: number;
 	totalOutputTokens: number;
@@ -89,7 +89,7 @@ export interface OverviewResponse {
 }
 
 export interface ActivityResponse {
-	source?: "api" | "local";
+
 	daily: Array<{
 		date: string;
 		messageCount: number;
@@ -116,7 +116,7 @@ export interface ProjectsResponse {
 }
 
 export interface ModelsResponse {
-	source?: "api" | "local";
+
 	models: Array<{
 		model: string;
 		displayName: string;
@@ -150,7 +150,7 @@ export interface SessionsResponse {
 }
 
 export interface CostsResponse {
-	source?: "api" | "local";
+
 	daily: Array<{
 		date: string;
 		costByModel: Record<string, number>;
@@ -166,7 +166,7 @@ export interface CostsResponse {
 }
 
 export interface InsightsResponse {
-	source?: "api" | "local";
+
 	cacheHitRate: number;
 	avgMessagesPerSession: number;
 	peakHour: number;

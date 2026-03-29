@@ -89,8 +89,6 @@ app.get("/api/health", async (c) => {
 		// stats not available yet
 	}
 
-	const apiConfigured = !!config.anthropicAdminApiKey;
-
 	return c.json({
 		status,
 		dataDir: config.claudeDataDir,
@@ -98,7 +96,6 @@ app.get("/api/health", async (c) => {
 		statsCacheExists,
 		projectsDirExists,
 		sessionCount,
-		apiConfigured,
 		lastDataDate,
 		issues,
 	});
@@ -116,7 +113,6 @@ if (process.env.NODE_ENV === "production") {
 async function validateAndStart() {
 	console.log(`Claude Code Dashboard starting on port ${config.port}`);
 	console.log(`Data directory: ${config.claudeDataDir}`);
-	console.log(`Admin API key: ${config.anthropicAdminApiKey ? "configured" : "not set"}`);
 
 	try {
 		await fs.access(config.claudeDataDir);

@@ -7,7 +7,6 @@ import { ErrorAlert } from "@/components/ui/error-alert";
 import { useModels } from "@/hooks/use-queries";
 import { formatTokens, formatPercent } from "@/lib/format";
 import { ApiError } from "@/lib/api";
-import { SourceBadge } from "@/components/ui/source-badge";
 
 export function ModelsPage() {
 	const { data, isLoading, isError, error, refetch } = useModels();
@@ -26,7 +25,7 @@ export function ModelsPage() {
 
 	return (
 		<div>
-			<Header title="Models" source={data?.source} />
+			<Header title="Models" />
 			<div className="p-8">
 				{/* KPI row */}
 				<div className="grid grid-cols-3 gap-4 mb-8">
@@ -60,12 +59,10 @@ export function ModelsPage() {
 				{/* Donut + legend */}
 				<div className="grid grid-cols-3 gap-4 mb-8">
 					<div className="col-span-2 border border-border p-6">
-						<div className="flex items-center gap-1.5 mb-4">
+						
 							<h3 className="text-[11px] uppercase tracking-[0.05em] font-semibold text-muted">
 								Token distribution by model
 							</h3>
-							<SourceBadge source={data?.source} />
-						</div>
 						{isLoading ? (
 							<ChartSkeleton height="h-72" />
 						) : (
@@ -86,10 +83,8 @@ export function ModelsPage() {
 				{/* Model details table */}
 				<div className="border border-border">
 					<div className="px-6 pt-5 pb-3">
-						<div className="flex items-center gap-1.5">
+						
 							<h3 className="text-[11px] uppercase tracking-[0.05em] font-semibold text-muted">Model breakdown</h3>
-							<SourceBadge source={data?.source} />
-						</div>
 					</div>
 					<DataTable
 						columns={[

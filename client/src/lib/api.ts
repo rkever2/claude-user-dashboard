@@ -80,8 +80,5 @@ export const api = {
   getSessions: () => fetchApi("/sessions"),
   getSessionDetail: (id: string) => fetchApi(`/sessions/${id}`),
   getCosts: (range?: string) => fetchApi("/costs", range ? { range } : undefined),
-  getCostsAdmin: () => fetchApi("/costs/admin"),
   getInsights: () => fetchApi("/insights"),
-  getMode: () => fetchApi<{ mode: string; apiKeyConfigured: boolean }>("/mode"),
-  setMode: (mode: string) => postApi<{ mode: string }>("/mode", { mode }),
 };

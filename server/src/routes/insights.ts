@@ -53,7 +53,6 @@ app.get("/", async (c) => {
 	}));
 
 	const response: InsightsResponse = {
-		source: "local",
 		cacheHitRate: Math.round(cacheHitRate * 10) / 10,
 		avgMessagesPerSession,
 		peakHour,
