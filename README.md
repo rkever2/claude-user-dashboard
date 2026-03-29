@@ -35,37 +35,6 @@ CLAUDE_DATA_DIR=~/.claude
 PORT=3080
 ```
 
-### With API Key (enables mode switching)
-
-Adding an `ANTHROPIC_ADMIN_API_KEY` enables a **Local / API** mode switcher in the sidebar. You can toggle between modes at runtime without restarting the container.
-
-```bash
-# .env
-CLAUDE_DATA_DIR=~/.claude
-ANTHROPIC_ADMIN_API_KEY=sk-ant-admin-...
-PORT=3080
-```
-
-**To get your Admin API key:**
-
-1. Go to [https://platform.claude.com](https://platform.claude.com/)
-2. Sign in with your Anthropic account (requires **org admin** role)
-3. Click **API Keys** under "MANAGE"
-4. Create a new key to use with the dashboard
-5. Copy the key (starts with `sk-ant-admin-...`) and paste it into `.env`
-
-> **Note:** The Admin API provides org-level aggregates (tokens by model, by day). It does not identify which device made a request. Session-level detail (project names, branches, conversation logs) always comes from local `~/.claude/` files.
-
-**What API mode adds:**
-
-| Feature | Local Only | API Mode |
-|---------|-----------|----------|
-| Token usage (this device) | Yes | Yes |
-| Token usage (all devices) | No | Yes |
-| Session details (project, branch, prompts) | Yes | Yes |
-| Model breakdown | Yes | Yes |
-| Actual org-wide usage totals | No | Yes |
-
 ## Pages
 
 - **Overview** — KPI summary: input/output tokens, sessions, messages, avg messages/session, cache hit rate. Top projects table and model distribution donut chart.
