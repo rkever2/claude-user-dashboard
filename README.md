@@ -77,10 +77,3 @@ Client runs on http://localhost:5173 and proxies API requests to the server on p
 | `stats-cache.json` | Aggregated daily activity, model tokens, session counts, hour distribution |
 | `projects/*/sessions-index.json` | Per-project session metadata (branch, timestamps, message counts) |
 | `projects/*/*.jsonl` | Full conversation logs (parsed on-demand for session detail) |
-
-**Anthropic Admin API** (API mode only):
-
-| Endpoint | Content |
-|----------|---------|
-| `/v1/organizations/usage_report/messages` | Daily token usage by model across all devices |
-| `/v1/organizations/cost_report` | Org-wide cost data |
