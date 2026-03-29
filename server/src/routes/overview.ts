@@ -15,13 +15,12 @@ app.get("/", async (c) => {
 	let totalEstimatedCost = 0;
 
 	const modelBreakdown = Object.entries(stats.modelUsage).map(([model, usage]) => {
-		const cost = calculateCost(
-			model,
-			usage.inputTokens,
-			usage.outputTokens,
-			usage.cacheReadInputTokens,
-			usage.cacheCreationInputTokens,
-		);
+		const cost = calculateCost(model, {
+			inputTokens: usage.inputTokens,
+			outputTokens: usage.outputTokens,
+			cacheReadTokens: usage.cacheReadInputTokens,
+			cacheWriteTokens: usage.cacheCreationInputTokens,
+		});
 
 		totalInputTokens += usage.inputTokens;
 		totalOutputTokens += usage.outputTokens;

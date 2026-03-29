@@ -45,11 +45,13 @@ export function ActivityPage() {
 		}));
 	}, [data]);
 
-	// Friendly model names
+	// Friendly model names — shortened for chart labels
 	const modelLabel = (k: string) => {
 		if (k.includes("opus-4-6")) return "Opus 4.6";
 		if (k.includes("opus-4-5")) return "Opus 4.5";
 		if (k.includes("sonnet-4-5")) return "Sonnet 4.5";
+		if (k.includes("haiku")) return "Haiku";
+		if (k === "<synthetic>") return "Synthetic";
 		return k;
 	};
 

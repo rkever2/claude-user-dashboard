@@ -28,7 +28,18 @@ export interface SessionDetail {
   endTime?: string;
 }
 
+/**
+ * Parse a single JSONL session file and extract message details, token usage,
+ * model info, and tool use counts. Validates that fullPath is within the
+ * configured data directory to prevent path traversal.
+ */
 export async function parseSessionJsonl(fullPath: string): Promise<SessionDetail> {
+  const resolved = path.resolve(fullPath);
+  const dataDir = path.resolve(config.claudeDataDir);
+  if (!resolved.startsWith(dataDir)) {
+    throw new Error(`Path ${fullPath} is outside the data directory`);
+  }
+
   const raw = await fs.readFile(fullPath, "utf-8");
   const lines = raw.split("\n").filter((l) => l.trim());
 
@@ -94,8 +105,8 @@ export async function parseSessionJsonl(fullPath: string): Promise<SessionDetail
           timestamp: entry.timestamp,
         });
       }
-    } catch {
-      // Skip malformed lines
+    } catch (err) {
+      console.warn(`Skipping malformed JSONL line in ${fullPath}: ${(err as Error).message}`);
     }
   }
 

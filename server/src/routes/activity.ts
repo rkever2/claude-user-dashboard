@@ -35,7 +35,7 @@ app.get("/", async (c) => {
 
 		let estimatedCost = 0;
 		for (const [model, tokens] of Object.entries(tokensByModel)) {
-			estimatedCost += calculateCost(model, 0, tokens, 0, 0);
+			estimatedCost += calculateCost(model, { inputTokens: 0, outputTokens: tokens, cacheReadTokens: 0, cacheWriteTokens: 0 });
 		}
 
 		return {

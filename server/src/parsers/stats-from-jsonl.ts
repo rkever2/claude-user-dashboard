@@ -97,7 +97,9 @@ export async function computeStatsFromJsonl(afterDate: string): Promise<StatsCac
 			const entryType = entry.type as string;
 			const timestamp = entry.timestamp as string | undefined;
 
-			// Skip messages on or before the afterDate — those are already in the cache
+			// Skip messages on or before afterDate — those are already in the cache.
+			// The cache covers data through afterDate, so only count messages
+			// from days strictly after it to avoid double-counting.
 			if (timestamp) {
 				const messageDate = timestamp.split("T")[0];
 				if (messageDate <= afterDate) continue;
@@ -253,8 +255,10 @@ export async function computeStatsFromJsonl(afterDate: string): Promise<StatsCac
 }
 
 /**
- * Merge a base StatsCache with incremental data computed from JSONL files.
- * For overlapping dates, the incremental data replaces base data.
+ * Merge a base StatsCache (from stats-cache.json) with incremental data
+ * computed from recent JSONL files. For overlapping dates, incremental
+ * data replaces base data. Model usage and hour counts are summed.
+ * Returns a combined StatsCache covering the full date range.
  */
 export function mergeStats(base: StatsCache, incremental: StatsCache): StatsCache {
 	if (incremental.totalSessions === 0) {

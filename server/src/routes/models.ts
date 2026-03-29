@@ -15,13 +15,12 @@ app.get("/", async (c) => {
 		const totalTokens =
 			usage.inputTokens + usage.outputTokens + usage.cacheReadInputTokens + usage.cacheCreationInputTokens;
 
-		const cost = calculateCost(
-			model,
-			usage.inputTokens,
-			usage.outputTokens,
-			usage.cacheReadInputTokens,
-			usage.cacheCreationInputTokens,
-		);
+		const cost = calculateCost(model, {
+			inputTokens: usage.inputTokens,
+			outputTokens: usage.outputTokens,
+			cacheReadTokens: usage.cacheReadInputTokens,
+			cacheWriteTokens: usage.cacheCreationInputTokens,
+		});
 
 		grandTotalTokens += totalTokens;
 		grandTotalCost += cost;

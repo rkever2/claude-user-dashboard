@@ -112,23 +112,27 @@ if (process.env.NODE_ENV === "production") {
 // Startup validation
 async function validateAndStart() {
 	console.log(`Claude Code Dashboard starting on port ${config.port}`);
-	console.log(`Data directory: ${config.claudeDataDir}`);
+	console.log(`Data directory: ${path.resolve(config.claudeDataDir)}`);
 
 	try {
-		await fs.access(config.claudeDataDir);
-		console.log("Data directory: found");
+		const stat = await fs.stat(config.claudeDataDir);
+		if (!stat.isDirectory()) {
+			console.error(`ERROR: ${config.claudeDataDir} exists but is not a directory.`);
+		} else {
+			console.log("Data directory: found");
+		}
 	} catch {
 		console.warn(`WARNING: Data directory not found at ${config.claudeDataDir}`);
 		console.warn("  Set CLAUDE_DATA_DIR in .env or ensure ~/.claude exists.");
-		console.warn("  The server will start, but API calls will return errors.");
+		console.warn("  The server will start, but data endpoints will return errors.");
 	}
 
+	const projectsDir = path.join(config.claudeDataDir, "projects");
 	try {
-		await fs.access(path.join(config.claudeDataDir, "stats-cache.json"));
-		console.log("stats-cache.json: found");
+		await fs.access(projectsDir);
+		console.log("projects/ directory: found");
 	} catch {
-		console.warn("WARNING: stats-cache.json not found in data directory.");
-		console.warn("  Use Claude Code CLI to generate usage data.");
+		console.warn("WARNING: projects/ directory not found. JSONL session scanning will be unavailable.");
 	}
 
 	serve({

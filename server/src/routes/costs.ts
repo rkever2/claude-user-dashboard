@@ -28,7 +28,7 @@ app.get("/", async (c) => {
 
 		for (const [model, tokens] of Object.entries(t.tokensByModel)) {
 			const displayName = getModelDisplayName(model);
-			const cost = calculateCost(model, 0, tokens, 0, 0);
+			const cost = calculateCost(model, { inputTokens: 0, outputTokens: tokens, cacheReadTokens: 0, cacheWriteTokens: 0 });
 			costByModel[displayName] = Math.round(cost * 100) / 100;
 			totalCost += cost;
 		}
@@ -60,13 +60,12 @@ app.get("/", async (c) => {
 	// Calculate overall totals using full model usage data for accuracy
 	let totalEstimatedCost = 0;
 	for (const [model, usage] of Object.entries(stats.modelUsage)) {
-		totalEstimatedCost += calculateCost(
-			model,
-			usage.inputTokens,
-			usage.outputTokens,
-			usage.cacheReadInputTokens,
-			usage.cacheCreationInputTokens,
-		);
+		totalEstimatedCost += calculateCost(model, {
+			inputTokens: usage.inputTokens,
+			outputTokens: usage.outputTokens,
+			cacheReadTokens: usage.cacheReadInputTokens,
+			cacheWriteTokens: usage.cacheCreationInputTokens,
+		});
 	}
 
 	// This month

@@ -17,9 +17,10 @@ interface DataTableProps<T> {
   onRowClick?: (row: T) => void;
   sortConfig?: SortConfig | null;
   onSort?: (key: string) => void;
+  emptyMessage?: string;
 }
 
-export function DataTable<T>({ columns, data, onRowClick, sortConfig, onSort }: DataTableProps<T>) {
+export function DataTable<T>({ columns, data, onRowClick, sortConfig, onSort, emptyMessage }: DataTableProps<T>) {
   return (
     <div className="overflow-x-auto">
       <table className="w-full">
@@ -51,6 +52,13 @@ export function DataTable<T>({ columns, data, onRowClick, sortConfig, onSort }: 
           </tr>
         </thead>
         <tbody>
+          {data.length === 0 && (
+            <tr>
+              <td colSpan={columns.length} className="py-8 text-center text-sm text-muted">
+                {emptyMessage || "No data available"}
+              </td>
+            </tr>
+          )}
           {data.map((row, i) => (
             <tr
               key={i}
